@@ -97,7 +97,8 @@ namespace SSLCertExpiresIn
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Failed to retrieve SSL certificate, will try again shortly.");
+                        Log.Info("Failed to retrieve SSL certificate, will try again shortly.");
+                        Log.Error(ex);
                         throw ex;
                     }
                 }, TimeSpan.FromSeconds(0), 4);
