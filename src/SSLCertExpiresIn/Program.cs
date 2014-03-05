@@ -87,7 +87,7 @@ namespace SSLCertExpiresIn
                     try
                     {
                         var request = (HttpWebRequest) WebRequest.Create(url);
-                        request.Timeout = 15*1000;
+                        request.Timeout = 15*1000;      // x (seconds) * 1000 (milliseconds)
                         var response = (HttpWebResponse) request.GetResponse();
                         response.Close();
 
