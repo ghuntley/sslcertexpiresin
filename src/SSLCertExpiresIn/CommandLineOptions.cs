@@ -13,8 +13,11 @@ namespace SSLCertExpiresIn
         [ParserState]
         public IParserState LastParserState { get; set; }
 
-        [Option('s', "server", Required = true, HelpText = "Server (Hostname or IP Address) to query.")]
+        [Option('s', "server", Required = true, HelpText = "WebServer Hostname or IP Address.")]
         public string Server { get; set; }
+
+        [Option('p', "port", Required = false, HelpText = "WebServer Port")]
+        public int? Port { get; set; }
 
         [HelpOption]
         public string GetUsage()
@@ -34,7 +37,8 @@ namespace SSLCertExpiresIn
             };
 
             help.AddPreOptionsLine(Environment.NewLine);
-            help.AddPreOptionsLine(String.Format("Usage: {0} -d www.google.com", processname));
+            help.AddPreOptionsLine(String.Format("Usage: {0} -s www.freebsg.org [-p 443]", processname));
+            help.AddPreOptionsLine(String.Format("Usage: {0} -s 127.0.0.1 -p 8443", processname));
 
             help.AddOptions(this);
 

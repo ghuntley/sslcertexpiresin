@@ -21,6 +21,8 @@ namespace SSLCertExpiresIn
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        public const int DefaultWebserverPort = 443;
+
         public static string GetCertificateDistinguishedName(X509Certificate certificate)
         {
             Contract.Requires(certificate != null);
@@ -126,16 +128,16 @@ namespace SSLCertExpiresIn
             // allow app to be debugged in visual studio.
             if (Debugger.IsAttached)
             {
-                args = "-d www.freebsd.org ".Split(' ');
+                args = "-s www.freebsd.org -p 443 ".Split(' ');
             }
 
             if (Parser.Default.ParseArgumentsStrict(args, options))
             {
                 try
                 {
-                    Log.Trace("Results of parsing command line arguments: {0}", options.Server);
+                    Log.Trace("Results of parsing command line arguments: Server={0}, Port={1}", options.Server, options.Port);
 
-                    var url = String.Format("https://{0}", options.Server);
+                    var url = String.Format("https://{0}:{1}", options.Server, options.Port ?? DefaultWebserverPort);
                     var certificate = GetX509Certificate(url);
 
                     var expirationdate = GetCertificateExpirationDate(certificate);
