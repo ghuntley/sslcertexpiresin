@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Reflection;
 using CommandLine;
 using CommandLine.Text;
-
 using SSLCertExpiresIn.Helpers;
 
 namespace SSLCertExpiresIn

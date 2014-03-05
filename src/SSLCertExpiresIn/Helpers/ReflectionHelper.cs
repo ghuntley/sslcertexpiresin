@@ -18,7 +18,7 @@ namespace SSLCertExpiresIn.Helpers
         {
             Contract.Requires(value != null);
 
-            var attribute = (T)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(T));
+            var attribute = (T) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof (T));
             return value.Invoke(attribute);
         }
     }

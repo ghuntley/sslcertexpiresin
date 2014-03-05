@@ -1,33 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Runtime.ConstrainedExecution;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using CommandLine;
 using System.Diagnostics;
-using SSLCertExpiresIn.Helpers;
+using System.Diagnostics.Contracts;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using CommandLine;
 using NLog;
+using SSLCertExpiresIn.Helpers;
 
 namespace SSLCertExpiresIn
 {
     public class Program
     {
-
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public const int DefaultWebserverPort = 443;
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static string GetCertificateDistinguishedName(X509Certificate certificate)
         {
             Contract.Requires(certificate != null);
 
-            var distinguishedname = certificate.Subject;
+            string distinguishedname = certificate.Subject;
 
             Log.Debug("Certificate distinguished name is: {0}", distinguishedname);
             return distinguishedname;
@@ -37,7 +28,7 @@ namespace SSLCertExpiresIn
         {
             Contract.Requires(certificate != null);
 
-            var expirationdate = DateTime.Parse(certificate.GetExpirationDateString());
+            DateTime expirationdate = DateTime.Parse(certificate.GetExpirationDateString());
 
             Log.Debug("Certificate will expire at: {0}", expirationdate);
 
@@ -48,7 +39,7 @@ namespace SSLCertExpiresIn
         {
             Contract.Requires(certificate != null);
 
-            var issuer = certificate.Issuer;
+            string issuer = certificate.Issuer;
             Log.Debug("Certificate was issued by: {0}", issuer);
 
             return certificate.Issuer;
@@ -58,7 +49,7 @@ namespace SSLCertExpiresIn
         {
             Contract.Requires(certificate != null);
 
-            var publickey = certificate.GetPublicKeyString();
+            string publickey = certificate.GetPublicKeyString();
 
             Log.Debug("Certificate public key is: {0}", publickey);
             return publickey;
@@ -66,9 +57,9 @@ namespace SSLCertExpiresIn
 
         public static int GetDaysRemaining(DateTimeOffset expirydate)
         {
-            var currentdatetime = DateTime.Now;
+            DateTime currentdatetime = DateTime.Now;
 
-            var expiresin = expirydate - currentdatetime;
+            TimeSpan expiresin = expirydate - currentdatetime;
 
             Log.Debug("Certificate has {0} days remaining until the certificate expires.", expiresin.Days);
 
@@ -90,14 +81,14 @@ namespace SSLCertExpiresIn
 
             try
             {
-                var certificate = Retry.Do(() =>
+                X509Certificate certificate = Retry.Do(() =>
                 {
                     Log.Info("Retrieving SSL Certificate details for: {0}", url);
                     try
                     {
-                        var request = (HttpWebRequest)WebRequest.Create(url);
-                        request.Timeout = 15 * 1000;
-                        var response = (HttpWebResponse)request.GetResponse();
+                        var request = (HttpWebRequest) WebRequest.Create(url);
+                        request.Timeout = 15*1000;
+                        var response = (HttpWebResponse) request.GetResponse();
                         response.Close();
 
                         Log.Info("Successfully retrieved SSL certificate.");
@@ -122,7 +113,6 @@ namespace SSLCertExpiresIn
 
         private static void Main(string[] args)
         {
-
             var options = new CommandLineOptions();
 
             // allow app to be debugged in visual studio.
@@ -135,14 +125,15 @@ namespace SSLCertExpiresIn
             {
                 try
                 {
-                    Log.Trace("Results of parsing command line arguments: Server={0}, Port={1}", options.Server, options.Port);
+                    Log.Trace("Results of parsing command line arguments: Server={0}, Port={1}", options.Server,
+                        options.Port);
 
-                    var url = String.Format("https://{0}:{1}", options.Server, options.Port ?? DefaultWebserverPort);
-                    var certificate = GetX509Certificate(url);
+                    string url = String.Format("https://{0}:{1}", options.Server, options.Port ?? DefaultWebserverPort);
+                    X509Certificate certificate = GetX509Certificate(url);
 
-                    var expirationdate = GetCertificateExpirationDate(certificate);
+                    DateTimeOffset expirationdate = GetCertificateExpirationDate(certificate);
 
-                    var daysremaining = GetDaysRemaining(expirationdate);
+                    int daysremaining = GetDaysRemaining(expirationdate);
 
                     Environment.Exit(daysremaining);
                 }
