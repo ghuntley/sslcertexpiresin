@@ -13,9 +13,8 @@ namespace SSLCertExpiresIn
         [ParserState]
         public IParserState LastParserState { get; set; }
 
-        [Option('d', "domain", Required = true, HelpText = "Domain name to query.")]
-        public string Domain { get; set; }
-
+        [Option('s', "server", Required = true, HelpText = "Server (Hostname or IP Address) to query.")]
+        public string Server { get; set; }
 
         [HelpOption]
         public string GetUsage()

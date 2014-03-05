@@ -133,9 +133,9 @@ namespace SSLCertExpiresIn
             {
                 try
                 {
-                    Log.Trace("Results of parsing command line arguments: {0}", options.Domain);
+                    Log.Trace("Results of parsing command line arguments: {0}", options.Server);
 
-                    var url = String.Format("https://{0}", options.Domain);
+                    var url = String.Format("https://{0}", options.Server);
                     var certificate = GetX509Certificate(url);
 
                     var expirationdate = GetCertificateExpirationDate(certificate);
