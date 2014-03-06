@@ -6,7 +6,7 @@ days until the certificate has expired by setting the environment return code.
 * If a certificate will expire in 300 days then the RC=$? or %ERRORLEVEL% will be set to 300.
 * If a certificate expired 100 days ago then the RC=$? or %ERRORLEVEL% will be set to -100.
 * If a certificate will expire today then the RC=$? or %ERRORLEVEL% will be set to 0.
-* If a error occurrs whilst retrieving the certificate then the RC=$? or %ERRORLEVEL% will be set to -1.
+* If a error occurs whilst retrieving the certificate then the RC=$? or %ERRORLEVEL% will be set to -1.
 
 
 # Usage
